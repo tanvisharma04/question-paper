@@ -1,0 +1,27 @@
+[
+  {
+    "module_name": "Module 1",
+    "content": [
+      "python basics",
+      "python objects",
+      "standard types",
+      "built-in types",
+      "numbers",
+      "integers",
+      "floating point"
+    ],
+    "description": "Python fundamentals including objects, standard data types, and numbers."
+  },
+  {
+    "module_name": "Module 2",
+    "content": [
+      "files",
+      "file handling",
+      "open()",
+      "file objects",
+      "exceptions",
+      "modules"
+    ],
+    "description": "File handling in Python, exceptions, modules and packages."
+  }
+]
