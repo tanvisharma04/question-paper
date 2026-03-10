@@ -3,3 +3,12 @@ __pycache__/
 .env
 venv/
 *.csv
+# Ignore files inside data folders
+data/raw/*
+data/images/*
+data/processed/*
+
+# But keep the folder itself
+!data/raw/.gitkeep
+!data/images/.gitkeep
+!data/processed/.gitkeep
