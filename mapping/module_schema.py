@@ -1,32 +1,28 @@
-import spacy
-from keybert import KeyBERT
+import re
+import json
 
-nlp = spacy.load("en_core_web_sm")
-kw_model = KeyBERT()
+def parse_modules(text):
+    modules = []
 
-def extract_course_topics(text):
+    # Split based on "Module X:"
+    module_splits = re.split(r'(Module \d+: [^\n]+)', text)
 
-    semantic_keywords = kw_model.extract_keywords(text, 
-                                                 keyphrase_ngram_range=(1, 3), 
-                                                 stop_words='english', 
-                                                 use_mmr=True, 
-                                                 diversity=0.7)
-    
+    for i in range(1, len(module_splits), 2):
+        module_name = module_splits[i].strip()
+        content_block = module_splits[i+1].strip()
 
-    doc = nlp(text)
-    noun_phrases = [chunk.text.lower().strip() for chunk in doc.noun_chunks 
-                    if len(chunk.text.split()) <= 4] 
+        # First line/paragraph as description
+        lines = content_block.split('\n')
+        description = lines[0].strip()
 
+        # Full content (cleaned)
+        content = " ".join([line.strip() for line in lines if line.strip()])
 
-    combined_topics = set([kw[0] for kw in semantic_keywords] + noun_phrases)
-    
-    return sorted(list(combined_topics))
+        modules.append({
+            "module_name": module_name,
+            "description": description,
+            "content": content
+        })
 
+    return modules
 
-module_text = ""
-
-topics = extract_course_topics(module_text)
-
-print(f"Extracted {len(topics)} potential topics for mapping:")
-for t in topics:
-    print(f"- {t}")

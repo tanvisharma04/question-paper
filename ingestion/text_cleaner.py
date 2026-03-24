@@ -32,3 +32,10 @@ def clean_text(pages):
 
     return cleaned_pages
 
+def combine_pages(cleaned_pages):
+    full_text = ""
+
+    for page in cleaned_pages:
+        full_text += page["clean_text"] + "\n"
+
+    return full_text
