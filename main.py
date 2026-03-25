@@ -11,22 +11,6 @@ from ingestion.ques_extraction import extract_questions
 import os
 import streamlit as st
 
-def assign_marks(text):
-    text = text.lower()
-
-    # Section A (a) to (j)
-    if re.match(r"^\s*[a-j]\)", text):
-        return 2
-
-    # Section B (Q2-Q6)
-    if re.match(r"^\s*[2-6]\.", text):
-        return 5
-
-    # Section C (Q7-Q9)
-    if re.match(r"^\s*[7-9]\.", text):
-        return 10
-
-    return 0
 
 st.set_page_config(page_title="PDF Question Analyzer", layout="wide")
 st.title("PDF Question Analyzer")
@@ -51,7 +35,6 @@ if st.button("Analyze Documents"):
     else:
 
         modules = parse_modules(course_module)
-        st.write("Modules:", modules)
 
         pdf_files = []
 
@@ -94,8 +77,7 @@ if st.button("Analyze Documents"):
         # Extract questions
         questions = extract_questions(full_text)
 
-        st.subheader("Extracted Questions")
-        st.write(questions)
+        st.success("Questions Extracted")
 
         mapped_questions = []
 
@@ -108,26 +90,27 @@ if st.button("Analyze Documents"):
                 mapped_questions.append({
                     "question_text": q["question"],
                     "module_scores": result["scores"],
-                    "marks": q.get("marks", 5)
+                    "marks": q.get("marks") if q.get("marks") is not None else 5
                 })
 
-                st.write("Question:", q["question"])
-                st.write("Scores:", result)
-
-        st.header("Aggregated Results")
 
         weightage = calculate_weightage(mapped_questions, modules)
-
-        st.write("Weightage:", weightage)
 
         col1, col2 = st.columns([1,1])
 
         with col1:
 
             st.subheader("Module-wise Weightage")
+            
+            total_marks = sum(weightage.values())
 
             for mod_name, marks in weightage.items():
-                st.metric(label=mod_name, value=f"{marks} marks")
+                if total_marks > 0:
+                    pct = (marks / total_marks) * 100
+                    display_val = f"{pct:.1f}%"
+                else:
+                    display_val = f"0%"
+                st.metric(label=mod_name, value=display_val)
 
         with col2:
 
@@ -142,5 +125,3 @@ if st.button("Analyze Documents"):
                     st.write("Full Question:", q['question_text'])
                     st.write("Assigned Marks:", q['marks'])
                     st.write("Module Scores:", q['module_scores'])
-
-        st.write("Mapped Questions:", mapped_questions)
