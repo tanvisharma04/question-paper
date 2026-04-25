@@ -96,32 +96,16 @@ if st.button("Analyze Documents"):
 
         weightage = calculate_weightage(mapped_questions, modules)
 
-        col1, col2 = st.columns([1,1])
 
-        with col1:
-
-            st.subheader("Module-wise Weightage")
+        st.subheader("Module-wise Weightage")
             
-            total_marks = sum(weightage.values())
+        total_marks = sum(weightage.values())
 
-            for mod_name, marks in weightage.items():
-                if total_marks > 0:
-                    pct = (marks / total_marks) * 100
-                    display_val = f"{pct:.1f}%"
-                else:
-                    display_val = f"0%"
-                st.metric(label=mod_name, value=display_val)
-
-        with col2:
-
-            st.subheader("Mapped Questions")
-
-            for q in mapped_questions:
-
-                with st.expander(
-                    f"{q['marks']} Marks - {q['question_text'][:50]}..."
-                ):
-
-                    st.write("Full Question:", q['question_text'])
-                    st.write("Assigned Marks:", q['marks'])
-                    st.write("Module Scores:", q['module_scores'])
+        for mod_name, marks in weightage.items():
+            if total_marks > 0:
+                pct = (marks / total_marks) * 100
+                display_val = f"{pct:.1f}%"
+            else:
+                display_val = f"0%"
+            
+            st.metric(label=mod_name, value=display_val)
