@@ -53,11 +53,7 @@ if st.button("Analyze Documents"):
 
             for pdf_path in pdf_files:
 
-                images = pdf_to_images(
-                    pdf_path,
-                    IMG_DIR,
-                    poppler_path=r"C:\poppler\Release-25.12.0-0\poppler-25.12.0\Library\bin"
-                )
+                images = pdf_to_images(pdf_path, IMG_DIR)
 
                 all_images.extend(images)
 
