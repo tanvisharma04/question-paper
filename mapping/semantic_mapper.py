@@ -1,6 +1,11 @@
-from sentence_transformers import SentenceTransformer, util
+import streamlit as st
+from sentence_transformers import SentenceTransformer,util
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
+@st.cache_resource
+def load_model():
+    return SentenceTransformer("all-MiniLM-L6-v2")
+
+model = load_model()
 
 def semantic_map(question, modules):
     q_emb = model.encode(question, convert_to_tensor=True)
